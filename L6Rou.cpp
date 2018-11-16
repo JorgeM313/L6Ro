@@ -16,25 +16,103 @@ struct Calculator // Creating the struct provided
 };
 void processInput(Calculator * calc, string userInput) // Function that calculates the expression
 {
-  calc->LHValue
+	if(userInput != "=")
+	{
+		string tempLH, tempRH;
+		for(int i = 0; i < userInput.size(); i++)
+		{
+			if(isspace(userInput[i])){
+
+			}
+			else if(isdigit(userInput[i])){
+				tempLH = tempLH + userInput[i];
+			}
+			else if (userInput[i] == '*' || userInput[i] == '-' || userInput[i] == '\\' || userInput[i] == '+' || userInput[i] == '%')
+			{
+				calc->lastOperator = userInput[i];
+				break;
+			}
+			else
+			{
+				cout << "Bad Input1\n";
+				break;
+			}
+		}
+		for (int j = 0;j< userInput.size(); j++)
+		{
+			if (userInput[j] == '*' || userInput[j] == '-' || userInput[j] == '\\' || userInput[j] == '+' || userInput[j] == '%')
+			{
+				for(int i = j+1; i <userInput.size();i++)
+				{			
+					if(isspace(userInput[i])){
+
+					}
+					else if(isdigit(userInput[i])){
+						tempRH = tempRH + userInput[i];
+					}
+					else {
+						cout << "Bad Input2\n";
+					}
+				}
+				break;
+			}
+		}
+		if (!tempLH.empty())
+		{	
+			calc->LHValue = stoll(tempLH,nullptr,10);
+		}
+
+		if (!tempRH.empty())
+		{
+			*calc->RHValue = stoll(tempRH,nullptr,10);
+		}
+		
+	}
+	if (calc->lastOperator == '%'){
+		calc->LHValue = calc->LHValue % *calc->RHValue;
+	}	
+	if (calc->lastOperator == '+'){
+		calc->LHValue = calc->LHValue + *calc->RHValue; 
+	}
+	if (calc->lastOperator == '-'){
+		calc->LHValue = calc->LHValue - *calc->RHValue;
+	}
+	if (calc->lastOperator == '*'){
+		calc->LHValue = calc->LHValue * *calc->RHValue;
+	}
+	if (calc->lastOperator == '/'){
+		if (*calc->RHValue = 0)
+		{
+			cout << "Error. Cannot divide by 0.\n";
+		} 
+		else
+		{
+			calc->LHValue = calc->LHValue / *calc->RHValue;
+		}
+	}
+	cout << " = "<< calc->LHValue<<endl; 
+
+
+
 }
 
 int main()
 {
-  Calculator problem = {0, 0, +};
+  Calculator *problem = new Calculator; 
 
-  problem.LHValue = 0;
-  problem.RHValue = new long long;
-  *(problem.RHValue) = 0;
-  problem.lastOperator = '+';
+  problem->LHValue = 0;
+  problem->RHValue = new long long;
+  *problem->RHValue = 0;
+  problem->lastOperator = '+';
 
-  string userInput = 0;
+  string userInput ="";
+do{
   cout << "Welcome to the Calculator program.\n";
   cout << "Enter your expression:\n";
-  cin.ignore();
   getline(cin, userInput);
-  processInput(&problem, userInput);
-
+	if(userInput != "q")
+  	processInput(problem, userInput);
+}while(userInput != "q");
 return 0;
 }
 
